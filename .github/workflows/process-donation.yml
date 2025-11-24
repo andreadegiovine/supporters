@@ -1,0 +1,37 @@
+name: Process Donation
+
+on:
+  repository_dispatch:
+    types: [donation-received]
+
+jobs:
+  process-donation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create platform directory if not exists
+        run: mkdir -p "${{ github.event.client_payload.platform }}"
+
+      - name: Add supporter to file
+        run: |
+          PLATFORM="${{ github.event.client_payload.platform }}"
+          BEERS="${{ github.event.client_payload.beers }}"
+          NAME="${{ github.event.client_payload.name }}"
+          FILE_PATH="$PLATFORM/$BEERS.txt"
+          
+          # Se il file non esiste, crealo con il nome
+          if [ ! -f "$FILE_PATH" ]; then
+            echo "$NAME" > "$FILE_PATH"
+          else
+            # Se esiste, aggiungi il nome all'inizio
+            echo "$NAME" | cat - "$FILE_PATH" > temp && mv temp "$FILE_PATH"
+          fi
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Add supporter: ${{ github.event.client_payload.name }} (${{ github.event.client_payload.beers }} beers)"
+          git push
