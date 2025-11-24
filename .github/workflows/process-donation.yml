@@ -3,7 +3,10 @@ name: Process Donation
 on:
   repository_dispatch:
     types: [donation-received]
-
+    
+permissions:
+  contents: write
+  
 jobs:
   process-donation:
     runs-on: ubuntu-latest
