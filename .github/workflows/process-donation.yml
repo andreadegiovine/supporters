@@ -22,13 +22,16 @@ jobs:
           BEERS="${{ github.event.client_payload.beers }}"
           NAME="${{ github.event.client_payload.name }}"
           FILE_PATH="$PLATFORM/$BEERS.txt"
+          MAIN_PATH="$BEERS.txt"
           
           # Se il file non esiste, crealo con il nome
           if [ ! -f "$FILE_PATH" ]; then
             echo "$NAME" > "$FILE_PATH"
+            echo "$NAME" > "$MAIN_PATH"
           else
             # Se esiste, aggiungi il nome all'inizio
             echo "$NAME" | cat - "$FILE_PATH" > temp && mv temp "$FILE_PATH"
+            echo "$NAME" | cat - "$MAIN_PATH" > temp && mv temp "$MAIN_PATH"
           fi
 
       - name: Commit and push
