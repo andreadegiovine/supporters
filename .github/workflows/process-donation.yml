@@ -27,10 +27,16 @@ jobs:
           # Se il file non esiste, crealo con il nome
           if [ ! -f "$FILE_PATH" ]; then
             echo "$NAME" > "$FILE_PATH"
-            echo "$NAME" > "$MAIN_PATH"
           else
             # Se esiste, aggiungi il nome all'inizio
             echo "$NAME" | cat - "$FILE_PATH" > temp && mv temp "$FILE_PATH"
+          fi
+
+          # Se il file non esiste, crealo con il nome
+          if [ ! -f "$MAIN_PATH" ]; then
+            echo "$NAME" > "$MAIN_PATH"
+          else
+            # Se esiste, aggiungi il nome all'inizio
             echo "$NAME" | cat - "$MAIN_PATH" > temp && mv temp "$MAIN_PATH"
           fi
 
