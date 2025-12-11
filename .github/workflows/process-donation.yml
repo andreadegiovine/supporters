@@ -19,10 +19,17 @@ jobs:
       - name: Add supporter to file
         run: |
           PLATFORM="${{ github.event.client_payload.platform }}"
-          BEERS="${{ github.event.client_payload.beers }}"
           NAME="${{ github.event.client_payload.name }}"
-          FILE_PATH="$PLATFORM/$BEERS.txt"
-          MAIN_PATH="$BEERS.txt"
+          TYPE="${{ github.event.client_payload.type }}"
+          
+          if [ "$TYPE" = "single" ]; then
+            FILE_NAME="${{ github.event.client_payload.beers }}"
+          else
+            FILE_NAME="monthly"
+          fi
+          
+          FILE_PATH="$PLATFORM/$FILE_NAME.txt"
+          MAIN_PATH="$FILE_NAME.txt"
           
           # Se il file non esiste, crealo con il nome
           if [ ! -f "$FILE_PATH" ]; then
